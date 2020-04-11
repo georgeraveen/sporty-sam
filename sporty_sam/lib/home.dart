@@ -9,6 +9,7 @@ import 'dietTracker.dart';
 import 'myHealth.dart';
 import 'challenge.dart';
 import 'myProfile.dart';
+import 'healthdata.dart';
 
 
 import 'package:sporty_sam/services/authentication.dart';
@@ -227,7 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => DietTrackerPage()));
+                            builder: (context) => HealthData()));
                   },
                   iconSize: 48.0,
                   color: Colors.black),
