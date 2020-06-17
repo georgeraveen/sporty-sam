@@ -15,6 +15,7 @@ import 'package:sporty_sam/services/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:video_player/video_player.dart';
 
 import 'dart:async';
 
@@ -53,6 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 //
   String petMovement = "fail";
+// animation pet videos
+  String petVideo = "bear_walk.mp4";
+  VideoPlayerController _controller;
 
   signOut() async {
     try {
@@ -143,6 +147,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    // Pointing the video controller to our local asset.
+    _controller = VideoPlayerController.asset(
+        "lib/assets/videoAnimation/bear1/" + petVideo)
+      ..initialize().then((_) {
+        // Once the video has been loaded we play the video and set looping to true.
+        _controller.play();
+        _controller.setLooping(true);
+// Ensure the first frame is shown after the video is initialized.
+        setState(() {});
+      });
+
     setDatabaseDate();
     //_checkEmailVerification();
 
@@ -223,10 +238,29 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
+//          Container(
+//            decoration: BoxDecoration(
+//                image: DecorationImage(image: AssetImage("lib/assets/back.png"),fit: BoxFit.fitHeight,)),
+//
+//          ),
+          FittedBox(
+            // If your background video doesn't look right, try changing the BoxFit property.
+            // BoxFit.fill created the look I was going for.
+            fit: BoxFit.fitHeight,
+//            child: VideoPlayer(_controller),
+            child: SizedBox(
+              width: _controller.value.size?.width ?? 0,
+              height: _controller.value.size?.height ?? 0,
+              child: VideoPlayer(_controller),
+            ),
+          ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+//            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              SizedBox(
+                height: 50,
+              ),
               Text(
                 'Welcome to Sporty Sam',
                 style: Theme.of(context).textTheme.display1,
@@ -313,9 +347,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         preAct = act;
                         print("activity updated" + preAct.type + act.type);
                       }
-                      if (act.type == 'STILL')
+                      if (act.type == 'STILL') {
                         petMovement = "fail";
-                      else if (act.type == 'ON_BICYCLE')
+                        petVideo = "bear_run.mp4";
+                      } else if (act.type == 'ON_BICYCLE')
                         petMovement = "idle";
                       else
                         petMovement = "success";
@@ -324,24 +359,24 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: <Widget>[
                           Text(
                               "Your phone is to ${act.confidence}% ${act.type}!"),
-                          InkWell(
-                            child: Container(
-                              height: 300,
-                              width: 300,
-                              child: FlareActor(
-                                "lib/assets/animations/teddy.flr",
-                                animation: petMovement,
-                                //color: Colors.red
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PetShop(),
-                                  ));
-                            },
-                          ),
+//                          InkWell(
+//                            child: Container(
+//                              height: 300,
+//                              width: 300,
+//                              child: FlareActor(
+//                                "lib/assets/animations/teddy.flr",
+//                                animation: petMovement,
+//                                //color: Colors.red
+//                              ),
+//                            ),
+//                            onTap: () {
+//                              Navigator.push(
+//                                  context,
+//                                  MaterialPageRoute(
+//                                    builder: (context) => PetShop(),
+//                                  ));
+//                            },
+//                          ),
                         ],
                       );
 //                      return Text("Your phone is to ${act.confidence}% ${act.type}!");
@@ -350,24 +385,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     return Column(
                       children: <Widget>[
                         Text("No activity detected."),
-                        InkWell(
-                          child: Container(
-                            height: 300,
-                            width: 300,
-                            child: FlareActor(
-                              "lib/assets/animations/teddy.flr",
-                              animation: petMovement,
-                              //color: Colors.red
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PetShop(),
-                                ));
-                          },
-                        )
+//                        InkWell(
+//                          child: Container(
+//                            height: 300,
+//                            width: 300,
+//                            child: FlareActor(
+//                              "lib/assets/animations/teddy.flr",
+//                              animation: petMovement,
+//                              //color: Colors.red
+//                            ),
+//                          ),
+//                          onTap: () {
+//                            Navigator.push(
+//                                context,
+//                                MaterialPageRoute(
+//                                  builder: (context) => PetShop(),
+//                                ));
+//                          },
+//                        )
                       ],
                     );
                   },
